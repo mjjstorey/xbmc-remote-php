@@ -12,8 +12,8 @@ curl_setopt($ch, CURLOPT_URL, $xbmcjsonservice);
 $request = '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}';
 curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 $array = json_decode(curl_exec($ch),true);
-if (($array['result']['audio']) == 1) { echo "AudioPlayer active"; echo "<br><br>"; }
-if (($array['result']['video']) == 1) { echo "VideoPlayer active"; echo "<br><br>"; }
+//if (($array['result']['audio']) == 1) { echo "AudioPlayer active"; echo "<br><br>"; }
+//if (($array['result']['video']) == 1) { echo "VideoPlayer active"; echo "<br><br>"; }
 
 echo "<br>";
 
