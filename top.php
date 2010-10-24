@@ -13,9 +13,16 @@
 <meta name="viewport" content="width=1024" />
 <?php endif; ?>
 
-<title>XBMC Remote</title>
 </head>
 <body>
 <div id="container">
-<div id="header">
-
+ <center>
+ <div id="header">
+  <h1>
+  <a href="main.php" target="main">XBMC PHP Remote</a>
+  </h1>
+ </div>
+ </center>
+</div>
+</body>
+</html>
