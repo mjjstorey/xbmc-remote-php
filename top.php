@@ -10,7 +10,6 @@
 <meta name="viewport" content="width=980" />
 <link rel="stylesheet" href="css/safari-mobile.css" title="default" type="text/css">
 <?php else: ?>
-<meta name="viewport" content="width=1024" />
 <link rel="stylesheet" href="css/desktop.css" title="default" type="text/css">
 <?php endif; ?>
 

@@ -10,11 +10,30 @@
 <meta name="viewport" content="width=980" />
 <link rel="stylesheet" href="css/safari-mobile.css" title="default" type="text/css">
 <?php else: ?>
-<meta name="viewport" content="width=1024" />
 <link rel="stylesheet" href="css/desktop.css" title="default" type="text/css">
 <?php endif; ?>
 
 </head>
+
+<?php
+//include port and hostname from config file
+include "config.php";
+
+//json rpc call
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_URL, $xbmcjsonservice);
+
+//check if jsonrpc service is running
+$data = '{"jsonrpc": "2.0", "method": "JSONRPC.Ping", "id": 1}';
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+$array = json_decode(curl_exec($ch),true);
+
+//show options or warning message
+if ($array[result] == 'pong') {
+?>
+
 <body>
 <div id="container">
  <div id="header">
@@ -33,5 +52,18 @@
  </div>
 </div>
 </body>
+
+<?php } else {
+
+echo "Could not connect to the jsonrpc XBMC service.";
+echo "<br><br>";
+echo "- Check if the option \"Allow control of XBMC via http\" is enabled in the Network Settings.";
+echo "<br>";
+echo "- Check if the port number in config.php matches the port number from the Network Settings.";
+
+}
+
+?>
+
 </html>
 
