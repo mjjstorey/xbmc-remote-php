@@ -27,65 +27,37 @@ echo "<div id=\"content\"><p>";
 echo "AudioPlaylist.GetItems:<br><br>";
 echo "</p></div>";
 
-//Get audio playlist
+//get audio playlist
 echo "<div id=\"utility\"><ul>";
 $audioplaylistdata = '{"jsonrpc": "2.0", "method": "AudioPlaylist.GetItems", "id": 1}';
 curl_setopt($ch, CURLOPT_POSTFIELDS, $audioplaylistdata);
 $audioplaylistarray = json_decode(curl_exec($ch),true);
 $audioplaylistresults = $audioplaylistarray['result'];
 
-//print array
-//echo "<pre>";
-//echo print_r($audioplaylistresults);
-//echo "</pre>";
-
+//if argument2 is set, change or rewind song
 if(!empty($_GET['argument2']))
 {
   //get selected song
   $selectedsong = substr($_GET['argument2'], 4);
-
-  //number of songs to skip or go back
-  $backorfoward = $audioplaylistresults['current'] - $selectedsong;
-
-  //check if the song playing is selected
-  if ($backorfoward != 0)
+  if ($selectedsong == $audioplaylistresults[current])
   {
-    //not same song is selected, choose other song
-    if ($backorfoward < 0)
-    {
-      //set forward
-      $forwards = (int)substr($backfoward, 1);
-      $y = 1;
-      while ($forwards >= $y)
-      {
-        //audio playlist next
-        $data = '{"jsonrpc": "2.0", "method": "AudioPlaylist.SkipNext", "id": 1}';
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $array = json_decode(curl_exec($ch),true);
-      }
-    }
-    else
-    {
-      //set backward
-      $backwards = $backfoward;
-      $y = 1;
-      while ($backwards >= $y)
-      {
-        //audio playlist previous
-        $data = '{"jsonrpc": "2.0", "method": "AudioPlaylist.SkipPrevious", "id": 1}';
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $array = json_decode(curl_exec($ch),true);
-      }
-    }
-  }
-  else
-  {
-   //current playing song is selected, do audio playlist rewind
-   $data = '{"jsonrpc": "2.0", "method": "AudioPlayer.Rewind", "id": 1}';
-   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-   $array = json_decode(curl_exec($ch),true);
+    //current playing song is selected, do audio playlist rewind
+    $data = '{"jsonrpc": "2.0", "method": "AudioPlayer.Rewind", "id": 1}';
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    $array = json_decode(curl_exec($ch),true);
+  } else {
+    //audio playlist next
+    $data = '{"jsonrpc": "2.0", "method": "AudioPlaylist.Play", "params": ' . $selectedsong . ', "id": 1}';
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    $array = json_decode(curl_exec($ch),true);
   }
 }
+
+//renew audio playlist
+$audioplaylistdata = '{"jsonrpc": "2.0", "method": "AudioPlaylist.GetItems", "id": 1}';
+curl_setopt($ch, CURLOPT_POSTFIELDS, $audioplaylistdata);
+$audioplaylistarray = json_decode(curl_exec($ch),true);
+$audioplaylistresults = $audioplaylistarray['result'];
 
 if (array_key_exists('items', $audioplaylistresults))
 {
@@ -102,7 +74,11 @@ if (array_key_exists('items', $audioplaylistresults))
   {
     //show music files in playlist where argument2 is songid in playlist
     $inhoud = $value['file'];
+    if ($i == $audioplaylistresults[current] ) {
+    echo "<li><a style=\"color: #800000\" href=getplaylist.php?argument2=song$i>$inhoud</a></li>\n";
+    } else {
     echo "<li><a href=getplaylist.php?argument2=song$i>$inhoud</a></li>\n";
+    }
     $i++;
   }
 }
@@ -144,4 +120,3 @@ echo "</ul></div><br><br>";
 include "downline.php";
 
 ?>
-
